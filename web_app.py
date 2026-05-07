@@ -58,7 +58,7 @@ def ask_bg_bot(user_question):
     
     # REVERTED TO THIS SPECIFIC VERSION
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022", 
+        model="claude-sonnet-4-5", 
         max_tokens=600,
         system=system_prompt,
         messages=formatted_history + [{"role": "user", "content": user_question}]
