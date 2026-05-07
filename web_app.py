@@ -14,30 +14,15 @@ if not api_key:
 
 client = anthropic.Anthropic(api_key=api_key)
 
-# 2. BRANDING & STYLE (Matching the Cyan/Black Logo)
+# 2. BRANDING & STYLE (Cyan & Black Theme)
 st.set_page_config(page_title="BG Customs Portal", page_icon="👟")
 
 st.markdown(f"""
     <style>
-    /* Dark background */
-    .stApp {{ 
-        background-color: #0E1117; 
-    }}
-    /* Cyan titles to match logo */
-    h1 {{ 
-        color: #00FFFF; 
-        font-family: 'Helvetica', sans-serif; 
-        font-weight: 800; 
-        text-transform: uppercase;
-    }}
-    /* White text for the rest */
-    .stMarkdown p {{
-        color: #FFFFFF;
-    }}
-    /* Horizontal line color */
-    hr {{ 
-        border: 0; height: 1px; background: #00FFFF; opacity: 0.3;
-    }}
+    .stApp {{ background-color: #0E1117; }}
+    h1 {{ color: #00FFFF; font-family: 'Helvetica', sans-serif; font-weight: 800; text-transform: uppercase; }}
+    .stMarkdown p {{ color: #FFFFFF; }}
+    hr {{ border: 0; height: 1px; background: #00FFFF; opacity: 0.3; }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -45,7 +30,6 @@ st.markdown(f"""
 col1, col2 = st.columns([1, 3])
 with col1:
     try:
-        # Ensure your uploaded PNG is saved as 'logo.png' in the 'data' folder
         st.image("data/logo.png", width=120) 
     except:
         st.write("👟") 
@@ -66,22 +50,15 @@ except FileNotFoundError:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 5. AI ENGINE
+# 5. AI ENGINE (REVERTED TO STABLE VERSION)
 def ask_bg_bot(user_question):
-    system_prompt = f"""
-    IDENTITY: You are a lead designer at BG Customs in Hull. 
-    TONE: Expert, exclusive, friendly. Use "we/us/our".
-    KNOWLEDGE: {bg_context}
-    RULES: 
-    1. Confirm size/design before links.
-    2. Mention £60 deposit & 4-6 week wait.
-    3. If they ask for random customs, explain we only do signature drops now.
-    """
+    system_prompt = f"You are a lead designer at BG Customs. Knowledge: {bg_context}"
     
     formatted_history = [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
     
+    # REVERTED TO THIS SPECIFIC VERSION
     response = client.messages.create(
-        model="claude-3-5-sonnet-latest", 
+        model="claude-3-5-sonnet-20241022", 
         max_tokens=600,
         system=system_prompt,
         messages=formatted_history + [{"role": "user", "content": user_question}]
